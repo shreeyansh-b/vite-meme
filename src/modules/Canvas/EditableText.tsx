@@ -8,6 +8,7 @@ type EditableTextProps = {
   id: string;
   onSelect: () => void;
   selectedTextId: string | null;
+  onDragEnd: ({ x, y }: { x: number; y: number }) => void;
 };
 
 const EditableText = ({
@@ -16,6 +17,7 @@ const EditableText = ({
   id,
   onSelect,
   selectedTextId,
+  onDragEnd,
 }: EditableTextProps) => {
   const transformerRef = useRef<ElementRef<typeof Transformer>>(null);
   const textRef = useRef<ElementRef<typeof KonvaText>>(null);
@@ -37,13 +39,14 @@ const EditableText = ({
   return (
     <>
       <KonvaText
-        ref={textRef}
-        text="Testt"
-        draggable
-        onClick={onSelect}
         x={x}
         y={y}
         id={id}
+        draggable
+        ref={textRef}
+        text="Testt"
+        onClick={onSelect}
+        onDragEnd={(e) => onDragEnd({ x: e.target.x(), y: e.target.y() })}
       />
       {isSelected && <Transformer ref={transformerRef} />}
     </>

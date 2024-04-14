@@ -64,13 +64,19 @@ const Canvas = ({ meme }: { meme: Meme }) => {
         />
         {texts?.map((text) => (
           <EditableText
+            key={text.id}
             x={text.x}
             y={text.y}
             id={text.id}
+            selectedTextId={selectedTextId}
             onSelect={() => {
               setSelectedTextId(text.id);
             }}
-            selectedTextId={selectedTextId}
+            onDragEnd={({ x, y }: { x: number; y: number }) => {
+              setTexts(
+                texts?.map((t) => (t.id === text.id ? { ...t, x, y } : t)),
+              );
+            }}
           />
         ))}
       </Layer>
