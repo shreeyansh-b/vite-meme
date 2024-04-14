@@ -1,22 +1,21 @@
-import { useEffect, useState } from "react";
+import { ElementRef, useEffect, useRef, useState } from "react";
 
-import { Stage, Layer, Image, Text } from "react-konva";
+import { Stage, Layer, Image } from "react-konva";
 
 import { Meme } from "../../hooks/data-fetchers/useGetMemesQuery";
+import { generateRandomId } from "../../utils";
+import { EditableText } from "./EditableText";
 
 const Canvas = ({ meme }: { meme: Meme }) => {
+  const stageRef = useRef<ElementRef<typeof Stage>>(null);
+
   const [image, setImage] = useState<HTMLImageElement>();
 
   const [texts, setTexts] = useState<
-    | [
-        {
-          text: string;
-          x: number;
-          y: number;
-        },
-      ]
-    | []
+    { x: number; y: number; id: string }[] | undefined
   >([]);
+
+  const [selectedTextId, setSelectedTextId] = useState<string | null>(null);
 
   useEffect(() => {
     const img = new window.Image();
@@ -28,21 +27,30 @@ const Canvas = ({ meme }: { meme: Meme }) => {
 
   return (
     <Stage
+      ref={stageRef}
       width={window.innerWidth}
       height={window.innerHeight}
       onMouseDown={(e) => {
         // if clicked on image add Text
-        if (e.target.attrs.id === meme.id.toString()) {
-          const newId = texts.length + 1;
+        if (
+          e.target.attrs.id === meme.id.toString() &&
+          selectedTextId === null
+        ) {
           setTexts([
-            ...texts,
+            ...(texts ?? []),
             {
-              text: "Text",
+              id: generateRandomId(10),
               x: e.evt.offsetX,
               y: e.evt.offsetY,
-              id: newId,
             },
           ]);
+        }
+        // deselect text
+        if (
+          e.target === e.target.getStage() ||
+          (e.target.attrs.id === meme.id.toString() && selectedTextId !== null)
+        ) {
+          setSelectedTextId(null);
         }
       }}
       id="stage-canvas"
@@ -54,13 +62,15 @@ const Canvas = ({ meme }: { meme: Meme }) => {
           height={meme.height / 2}
           id={meme.id.toString()}
         />
-        {texts.map((text) => (
-          <Text
-            key={text.id}
-            text={text.text}
+        {texts?.map((text) => (
+          <EditableText
             x={text.x}
             y={text.y}
-            draggable
+            id={text.id}
+            onSelect={() => {
+              setSelectedTextId(text.id);
+            }}
+            selectedTextId={selectedTextId}
           />
         ))}
       </Layer>
