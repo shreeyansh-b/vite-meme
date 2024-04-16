@@ -8,6 +8,9 @@ dependencies:
   '@mantine/core':
     specifier: ^7.8.0
     version: 7.8.0(@mantine/hooks@7.8.0)(@types/react@18.2.66)(react-dom@18.2.0)(react@18.2.0)
+  '@mantine/hooks':
+    specifier: ^7.8.0
+    version: 7.8.0(react@18.2.0)
   '@tanstack/react-query':
     specifier: ^5.29.2
     version: 5.29.2(react@18.2.0)
