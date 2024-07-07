@@ -148,6 +148,7 @@ const Canvas = ({ meme }: { meme: Meme }) => {
                     }}
                     onClick={() => setSelectedTextId(text.id)}
                     mt={2}
+                    w="100%"
                   />
                   <Button
                     variant="transparent"
