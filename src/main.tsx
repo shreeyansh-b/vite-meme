@@ -26,7 +26,7 @@ const queryClient = new QueryClient();
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <MantineProvider defaultColorScheme="dark">
+      <MantineProvider defaultColorScheme="light">
         <RouterProvider router={router} />
       </MantineProvider>
       <ReactQueryDevtools initialIsOpen={false} />
